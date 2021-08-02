@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JavaScript Fundamentals – Part 2</title>
+    <style>
+      body {
+        align-items: center;
+        background: linear-gradient(to top left, #28b487, #7dd56f);
+      }
+      h2 {
+        font-family: sans-serif;
+        font-size: 20px;
+        line-height: 1.3;
+        padding: 0 5px;
+        text-align: left;
+        color: white;
+        margin:5px 0 0 0;
+      }
+.deckPrPlayer{
+  display: flow-root;
+}
+.small {
+  border:3px solid orange;
+}
+.deckPrPlayer .card
+{
+	border-radius: 9px;
+	width: 95px;
+	height: 150px;
+	float:left;
+	background-color: white;
+	padding: 3px 3px 3px 3px;
+	margin: 5px;
+}
+
+.bordet {
+  
+}
+.card2
+{
+            width: 50px;
+            padding: 10px;
+            border: solid 1px #808080;
+            background-color: white;
+            display: inline-block;
+            border-radius: 10px;
+            font-size: 22px;
+            text-align: center;
+            margin: 3px;
+            border:solid 3px;
+}
+
+.card .value{
+	font-size:15pt;
+	font-family: sans-serif;
+}
+
+.card .suit
+{
+	background-image: url('https://www.thatsoftwaredude.com/images/post/0f631eeb-6c4a-4bfd-9f86-e0a08ae8584b.png');
+	height: 100px;
+	width: 90px;
+}
+
+.card .diamonds
+{
+	background-position-y: 100px;
+}
+
+.card .hearts
+{
+	background-position-x: 90px;
+}
+
+.card .clubs
+{
+	background-position-x:90px;
+	background-position-y:100px;
+}
+
+    </style>
+  </head>
+  <body>
+    <button id="button">Hand out cards</button>
+     <div id="deck1" class="deckPrPlayer">
+       <h2>Morten</h2>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card small"></div>
+        <div class="card small"></div>
+        <div class="card small"></div>
+    </div>
+    <div id="middleDeck" class="deckPrPlayer bordet">
+      <h2>Bordet</h2>
+      <div class="card"></div>
+    </div>
+    <div id="deck2" class="deckPrPlayer">
+      <h2>Carly</h2>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card small"></div>
+        <div class="card small"></div>
+        <div class="card small"></div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
