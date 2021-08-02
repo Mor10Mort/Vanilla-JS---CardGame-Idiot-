@@ -1,16 +1,15 @@
 'use strict';
 //object for the cardgame
 const playersDeck = {
-
+hiddenCardsPlaced: false,
+visibleCardsPlaced: false,
 };
 
 const deckMechanics = {
-amountOfPlayer: 2,
 allPlayers: [],
-firstThreeCardsPlaced: false,
 myCard: [ "2", "3", "4", "5", "6", "7", "8", "9", "10", "Knekt", "Dronning", "Kongen", "Ess"],
 mySuit: ["hjerte", "diamant", "klover","spar"],
-allCards: [], 
+allCards: [],
 createTheDeck: function getCard (){
     for (let rep = 0; rep < this.myCard.length; rep++) {
         const card = this.myCard[rep];
@@ -23,64 +22,79 @@ createTheDeck: function getCard (){
 randoNumber: function() {
     return Math.floor(Math.random() * this.allCards.length);
     },
+drawCards : function(amountCards) {
+    for (let i = 0; i < amountCards; i++) {
+         for(let i = 0; i < this.allPlayers.length; i++) {
+           let player = this.allPlayers[i];
+            if(playersDeck[player] === undefined) { 
+             playersDeck[player] = [];
+            }
+        playersDeck[player].push(deckMechanics.allCards.splice(deckMechanics.randoNumber(), 1));
+        };
+    }
+    
+},
+placeTheHiddenCards: function(numberOfCards){
+    const container = document.getElementById('cards'); 
+    this.allPlayers.forEach(function(count){
+        let playerMainDiv = document.createElement('div');
+        playerMainDiv.id = count;
+        playerMainDiv.className = 'playerDeck';
+        container.appendChild(playerMainDiv)
+        const playerContainer = document.getElementById(count);
+        for (let i=0; i < numberOfCards; i++){
+            let playersCards = document.createElement('div');
+            playersCards.className = 'card';
+            playersCards.innerHTML = "BACK OF CARDS";
+            playerContainer.appendChild(playersCards);  
+        }
+    });
+    playersDeck.hiddenCardsPlaced = true;
+},
+placeTheVisibleCards: function(numberOfCards){
+    this.allPlayers.forEach(function(count){
+        const playerContainer = document.getElementById(count);
+        for(let i = 0; i < numberOfCards; i++) {
+            let player = deckMechanics.allPlayers[i];
+            playerContainer.getElementsByClassName("card")[i].innerHTML = playersDeck[count][i,i+3]; 
+        } 
+    });
+    playersDeck.visibleCardsPlaced = false;
+},
 };
 
 deckMechanics.createTheDeck();
  
 const pickedCards = function (nameOfPlayer) {
     this.nameOfPlayer = nameOfPlayer;
-    this.pickedPlayerCards = [];
-    this.allPlayers = [];
-    this.activePlayer = false;
-};
-
-pickedCards.prototype.addPlayer = function () {
+    this.addPlayer = function () {
     deckMechanics.allPlayers.push(this.nameOfPlayer);
+    };
 };
-
-pickedCards.prototype.placeTheHiddenCards = function(){
-    for (let i = 0; i < 3; i++){
-        document.getElementById('deck1').getElementsByClassName("card")[i].innerHTML = "FLIPPED";
-        document.getElementById('deck2').getElementsByClassName('card')[i].innerHTML = "FLIPPED";
-    }
- };   
 
 //Create the new players
 const morten = new pickedCards('morten');
 const carly = new pickedCards('carly');
+ 
 morten.addPlayer();
 carly.addPlayer();
-
-function drawFromPile (amountCards) {
-    for (let i = 0; i < amountCards; i++) {
-        //HERE I WOULD LIKE TO CREATE AN ARRA BASED ON all players inside 'deckMechanics.allPlayers'. The array for the player should have inserted "amountCards" into its array.
-        
-        //playersDeck.player1.push(deckMechanics.allCards.splice(deckMechanics.randoNumber(), 1));
-        //playersDeck.player2.push(deckMechanics.allCards.splice(deckMechanics.randoNumber(), 1));
-    }
-    //deckMechanics.firstThreeCardsPlaced = true;
-};
-
+ 
 const theButton = document.getElementById('button');
+//Need different states
 theButton.addEventListener("click", () => {
-        if(deckMechanics.firstThreeCardsPlaced === false){
-        //First click, only to push out three cards (place down on table)
-            drawFromPile(3);
-                     
-            /*
-            morten.drawFromPile(3); 
-            carly.drawFromPile(3);
-            morten.amountOfCardspicked();
-            morten.placeTheHiddenCards();
-            carly.placeTheHiddenCards();
-            */
-        
-    } else if (deckMechanics.firstThreeCardsPlaced === true) {
-        //Second click, to push out three new cards (place up on table)
-       
+    if(playersDeck.hiddenCardsPlaced === false){
+            deckMechanics.drawCards(3);
+            deckMechanics.placeTheHiddenCards(3);
+            console.log(playersDeck);    
+    } else if (playersDeck.hiddenCardsPlaced === true) {   
+        deckMechanics.drawCards(3);
+        deckMechanics.placeTheVisibleCards(3);
+        console.log(playersDeck); 
        // myDeck.placeTheToppCards();
         //myDeck.synligeTreKort = true;
-    } else if (myDeck.passOutThreeCardsOnHand === false) {
+    } else if (playersDeck.hiddenCardsPlaced === true && playersDeck.visibleCardsPlaced === true) {
+        console.log("TOILET"); 
+        console.log(playersDeck); 
        // myDeck.pickRandomCard(3);
         //myDeck.passThreeCardsOnHand();
         //myDeck.passOutThreeCardsOnHand = true;
