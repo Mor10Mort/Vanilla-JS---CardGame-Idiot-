@@ -19,40 +19,37 @@
         color: white;
         margin:5px 0 0 0;
       }
-
+.activePlayer {color:black; background:white;}
 .playerDeck{
    display: flow-root;
+}
+.playerDeck .cardsOnHands .card {
+  width: 95px;
+	height: 150px;
+}
+.playerDeck .cardsOnHands .selected {
+ border:3px orange;
 }
 .small {
   border:3px solid orange;
 }
-.deckPrPlayer .card
+.card
 {
 	border-radius: 9px;
-	width: 95px;
-	height: 150px;
+	width: 75px;
+	height: 125px;
 	float:left;
 	background-color: white;
 	padding: 3px 3px 3px 3px;
 	margin: 5px;
+  text-align: center;
 }
-
-.bordet {
+.moveCard {
+  
+  cursor: move;
   
 }
-.card2
-{
-            width: 50px;
-            padding: 10px;
-            border: solid 1px #808080;
-            background-color: white;
-            display: inline-block;
-            border-radius: 10px;
-            font-size: 22px;
-            text-align: center;
-            margin: 3px;
-            border:solid 3px;
-}
+
 
 .card .value{
 	font-size:15pt;
@@ -75,7 +72,11 @@
 {
 	background-position-x: 90px;
 }
-
+#deck .card {
+      float: none;
+    margin: 1em auto;
+    background:radial-gradient(white, #ecd53ed9);
+}
 .card .clubs
 {
 	background-position-x:90px;
@@ -86,31 +87,9 @@
   </head>
   <body>
     <button id="button">Hand out cards</button>
+    <button id="playHand">PlaymyCards</button>
+    <div id="deck" class="deckPrPlayer moveCard"></div>
     <div id="cards" class="deckPrPlayer"></div>
-     <!--
-       <div id="deck1" class="deckPrPlayer">
-       <h2>Morten</h2>
-        <div class="card"></div>
-        <div class="card"></div>
-        <div class="card"></div>
-        <div class="card small"></div>
-        <div class="card small"></div>
-        <div class="card small"></div>
-    </div>
-    <div id="middleDeck" class="deckPrPlayer bordet">
-      <h2>Bordet</h2>
-      <div class="card"></div>
-    </div>
-    <div id="deck2" class="deckPrPlayer">
-      <h2>Carly</h2>
-        <div class="card"></div>
-        <div class="card"></div>
-        <div class="card"></div>
-        <div class="card small"></div>
-        <div class="card small"></div>
-        <div class="card small"></div>
-    </div>
-  -->
     <script src="script.js"></script>
   </body>
 </html>
