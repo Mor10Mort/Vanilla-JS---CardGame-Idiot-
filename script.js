@@ -11,12 +11,16 @@ const playersDeck = {
 
 
 const deckMechanics = {
-    noMoClicks: false,
+    firstPlayerUp: false,
     allPlayers: [],
     myCard: ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Knekt", "Dronning", "Kongen", "Ess"],
     mySuit: ["hjerte", "diamant", "klover", "spar"],
     allCards: [],
     stepThroughEachPlayer: function () {
+        if (this.firstPlayerUp == false) {
+            this.firstPlayerUp = true;
+            return this.countNextPlayer = 0;
+        }
         let thePlayerCounter = this.countNextPlayer == deckMechanics.allPlayers.length - 1;
         if (thePlayerCounter) {
             this.countNextPlayer = 0;
@@ -32,6 +36,9 @@ const deckMechanics = {
 
     },
     countNextPlayer: 0,
+    returnCurentPlayer: function () {
+        return this.allPlayers[this.countNextPlayer];
+    },
     createTheDeck: function getCard() {
         for (let rep = 0; rep < this.myCard.length; rep++) {
             const card = this.myCard[rep];
@@ -70,7 +77,6 @@ const deckMechanics = {
     placeTheVisibleCards: function (numberOfCards) {
 
         const container = document.getElementById('cards');
-        console.log("theLastCard on tableDeck: ", playersDeck.theDeckOnTable[playersDeck.theDeckOnTable.length - 1]);
 
         this.allPlayers.forEach(function (count, index) {
             let playerMainDiv = document.createElement('div');
@@ -93,48 +99,56 @@ const deckMechanics = {
         });
         playersDeck.visibleCardsPlaced = false;
     },
-    whoGetsToClickTheCards: function (thePlayer) {
-        let count = this.allPlayers[thePlayer];
-        let thePlayersDeck = document.getElementById(count);
-        if (thePlayersDeck.classList.contains("activePlayer")) {
-            console.log("added click");
+    whoGetsToClickTheCards: function () {
+        //forsøk heller å finne ut at du skal starte på null KUN hvis det er første gangen...
+        console.log(this.returnCurentPlayer());
 
-            var elements = document.getElementById(count).querySelectorAll('div');
+        var elements = document.getElementById(deckMechanics.returnCurentPlayer()).querySelectorAll('div');
 
-            elements.forEach(function (eachDiv) {
-                eachDiv.addEventListener("click", clickClickRules);
-            });
-            function clickClickRules(event) {
+        elements.forEach(function (eachDiv) {
+            eachDiv.addEventListener("click", clickClickRules);
+            giveMeExtraCardBtn.addEventListener("click", handMeAnotherCardBuddy);
 
-                let valuePlayerDeck = deckMechanics.myCard.indexOf(deckMechanics.getValueOfCard(this.innerHTML));
-                let theCardTableValue = deckMechanics.myCard.indexOf(deckMechanics.getValueOfCard(playersDeck.theDeckOnTable[playersDeck.theDeckOnTable.length - 1]));
-                console.log(valuePlayerDeck, theCardTableValue);
-                if (valuePlayerDeck >= theCardTableValue) {
-                    console.log(this.innerHTML);
-                    let theSelectedCard = playersDeck[count].findIndex(rank => rank == this.innerHTML);
+        });
+        function clickClickRules(event) {
 
-                    playersDeck.theDeckOnTable.push(playersDeck[count][theSelectedCard]);
-                    playersDeck[count].splice(theSelectedCard, 1);
-                    let playerDeck = document.getElementById("deck").getElementsByTagName("div")[0];
-                    playerDeck.style = "border:3px solid blue;";
-                    playerDeck.innerHTML = playersDeck.theDeckOnTable[playersDeck.theDeckOnTable.length - 1];
-                    thePlayerPlayTheCard.disabled = true;
+            let valuePlayerDeck = deckMechanics.myCard.indexOf(deckMechanics.getValueOfCard(this.innerHTML));
+            let theCardTableValue = deckMechanics.myCard.indexOf(deckMechanics.getValueOfCard(playersDeck.theDeckOnTable[playersDeck.theDeckOnTable.length - 1]));
 
-                    this.parentNode.removeChild(this);
-                    elements.forEach(function (eachDiv) {
-                        console.log(eachDiv);
-                        eachDiv.removeEventListener("click", clickClickRules);
-                    });
-                    deckMechanics.playerCounter(deckMechanics.stepThroughEachPlayer());
-                    //event.stopImmediatePropagation();
+            console.log(valuePlayerDeck, theCardTableValue);
+            if (valuePlayerDeck >= theCardTableValue) {
+                let theSelectedCard = playersDeck[deckMechanics.returnCurentPlayer()].findIndex(rank => rank == this.innerHTML);
+                //console.log(theSelectedCard, playersDeck[deckMechanics.returnCurentPlayer()][theSelectedCard]);
+                playersDeck.theDeckOnTable.push(playersDeck[deckMechanics.returnCurentPlayer()][theSelectedCard]);
+                playersDeck[deckMechanics.returnCurentPlayer()].splice(theSelectedCard, 1);
+                let playerDeck = document.getElementById("deck").getElementsByTagName("div")[0];
+                playerDeck.style = "border:3px solid blue;";
+                playerDeck.innerHTML = playersDeck.theDeckOnTable[playersDeck.theDeckOnTable.length - 1];
+                thePlayerPlayTheCard.disabled = true;
 
-                } else {
-                    console.log("NOPE");
+                this.parentNode.removeChild(this);
+                var elements = document.getElementById(deckMechanics.returnCurentPlayer()).querySelectorAll('div');
+                elements.forEach(function (eachDiv) {
+                    eachDiv.removeEventListener("click", clickClickRules);
+                });
+
+                deckMechanics.playerCounter(deckMechanics.stepThroughEachPlayer());
 
 
-                }
+            } else {
+                console.log("NOPE");
             }
-
+        }
+        function handMeAnotherCardBuddy(event) {
+            let localPlayer = deckMechanics.allPlayers[deckMechanics.countNextPlayer];
+            playersDeck[deckMechanics.returnCurentPlayer()].push(deckMechanics.allCards.splice(deckMechanics.randoNumber(), 1));
+            console.log(playersDeck[deckMechanics.returnCurentPlayer()]);
+            let giveMeANewCardYouSOnOffAB = document.createElement('div');
+            giveMeANewCardYouSOnOffAB.className = 'card';
+            giveMeANewCardYouSOnOffAB.innerHTML = playersDeck[deckMechanics.returnCurentPlayer()].slice(-1);
+            document.getElementById(deckMechanics.returnCurentPlayer()).appendChild(giveMeANewCardYouSOnOffAB);
+            giveMeANewCardYouSOnOffAB.addEventListener("click", clickClickRules);
+            event.stopImmediatePropagation();
 
         }
 
@@ -169,43 +183,13 @@ const deckMechanics = {
 
     playerCounter: function (playerNR) {
 
-        giveMeExtraCardBtn.disabled = false;
         this.allPlayers.forEach(function (value, i) {
             document.getElementById(deckMechanics.allPlayers[i]).classList.remove("activePlayer");
         });
         let thePlayersTitle = document.getElementById(deckMechanics.allPlayers[playerNR]);
         thePlayersTitle.classList.add("activePlayer");
-        //let thePlayersCardsOnHand = document.getElementById(deckMechanics.allPlayers[playerNR] + "playerCardsOnHands").querySelectorAll('div');
-        //playersDeck.thePlayersCardsOnHand.push(document.getElementById(deckMechanics.allPlayers[playerNR] + "playerCardsOnHands").querySelectorAll('div'));
-
         let playersCardOnHands = document.getElementById(deckMechanics.allPlayers[playerNR]).getElementsByClassName("card");
-
-
-        giveMeExtraCardBtn.addEventListener("click", function () {
-            console.log(playerNR);
-            if (deckMechanics.allCards.length === 0) {
-                giveMeExtraCardBtn.disabled = true;
-            }
-
-            playersDeck[deckMechanics.allPlayers[playerNR]].push(deckMechanics.allCards.splice(deckMechanics.randoNumber(), 1));
-
-
-            let giveMeANewCardYouSOnOffAB = document.createElement('div');
-            giveMeANewCardYouSOnOffAB.className = 'card';
-            giveMeANewCardYouSOnOffAB.innerHTML = playersDeck[deckMechanics.allPlayers[playerNR]].pop();
-            document.getElementById(deckMechanics.allPlayers[playerNR] + "playerCardsOnHands").appendChild(giveMeANewCardYouSOnOffAB);
-
-        });
         deckMechanics.whoGetsToClickTheCards(playerNR);
-        deckMechanics.theRulesOfTheDeck();
-    },
-    theRulesOfTheDeck: function (thePlayerPlacingCards) {
-        thePlayerPlayTheCard.addEventListener("click", function () {
-
-
-        });
-
-
     },
 
 };
@@ -232,7 +216,6 @@ const theButton = document.getElementById('button');
 const thePlayerPlayTheCard = document.getElementById('playHand');
 const giveMeExtraCardBtn = document.getElementById('giveMeExtraCard');
 thePlayerPlayTheCard.disabled = true;
-giveMeExtraCardBtn.disabled = true;
 
 deckMechanics.drawCards(9);
 deckMechanics.drawCardToDeck(1);
@@ -240,7 +223,7 @@ deckMechanics.placeTheVisibleCards(6);
 //deckMechanics.giveOutCardsToPlayerHands(3);
 
 //theButton.disabled = true;
-deckMechanics.playerCounter(0);
+deckMechanics.playerCounter(deckMechanics.stepThroughEachPlayer());
 
 
 
