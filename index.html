@@ -27,6 +27,9 @@
       background-color: white;
       color: black;
     }
+    .theCheckedCard{
+          border: 5px dotted #FF45B1;
+    }
 
     .activePlayer .cardsOnHands .card {
       border: 3px solid blue;
@@ -108,12 +111,16 @@
       background-position-x: 90px;
       background-position-y: 100px;
     }
+
+    .pickMePickMe {
+      border: 3px solid pink;
+    }
   </style>
 </head>
 
 <body>
   <!--<button id="button">Hand out cards</button>-->
-  <button id="playHand">PlaymyCards</button>
+  <progress value="0" max="10" id="progressBar"></progress>
   <button id="giveMeExtraCard">Give me a card</button>
   <div id="deck" class="deckPrPlayer moveCard"></div>
   <div id="cards" class="deckPrPlayer"></div>
